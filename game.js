@@ -68,4 +68,25 @@ getNewQuestion = () => {
     const questionsIndex = Math.floor(Math.random() * availabeleQuestions.length)
     currentQuestion = availabeleQuestions[questionsIndex]
     question.innerText = currentQuestion.question
+    
+    choices.forEach(choice => {
+        const number = choice.dataset['number']
+        choice.innerText = currentQuestion['choice' + number]
+    })
+
+    availabeleQuestions.splice(questionsIndex, 1)
+
+    acceptingAnswers = true
 }
+
+choices.forEach(choice => {
+    choice.addEventListener('click', e => {
+        if(!acceptingAnswers) return
+
+        acceptingAnswers = false
+        const SelectedChoice = e.target
+        const selectedAnswer = selectedChoice.dataset['number']
+
+        let classToApply = selectedAnswer == currentQuestion.answer
+    })
+})
