@@ -1,14 +1,15 @@
 const question = document.querySelector('#question');
-const choices = Array.from(document.querySelector('.choice-text'));
+const choices = Array.from(document.querySelectorAll('.choice-text'));
 const progressText = document.querySelector('#progressText');
 const scoreText = document.querySelector('#score');
 const progressBarFull = document.querySelector('#progressBarFull');
-
+console.log(choices)
 let currentQuestion = {}
 let acceptingAnswers = true
 let score = 0
-let questionCounter = 0 
+let questionCounter;
 let availabeleQuestions = []
+let time = 60
 
 let questions = [
     {
@@ -54,16 +55,21 @@ startGame = () => {
     availabeleQuestions = [...questions]
     getNewQuestion()
 }
+setInterval(function () {
+  var timerEl = document.getElementById("timer") 
+  timerEl.textContent = 
+}, 1000);
+
 
 getNewQuestion = () => {
-    if(availabeleQuestions.length === 0  || questionsCounter > MAX_QUESTIONS) {
+    if(availabeleQuestions.length === 0  || questionCounter > MAX_QUESTIONS) {
         localStorage.setItem('mostRecentScore', score)
 
         return window.location.assign('/end.html')
     }
     questionCounter++
-    progressText.innerText = 'Question ${questionCounter} of ${MAX_QUESTIONS}'
-    progressBarFull.getElementsByClassName.width = '${questionCounter/MAX_QUESTIONS) * 100}%'
+    progressText.innerText = `Question ${questionCounter} of ${MAX_QUESTIONS}`
+    progressBarFull.getElementsByClassName.width = `${(questionCounter/MAX_QUESTIONS) * 100}%`
 
     const questionsIndex = Math.floor(Math.random() * availabeleQuestions.length)
     currentQuestion = availabeleQuestions[questionsIndex]
@@ -72,6 +78,7 @@ getNewQuestion = () => {
     choices.forEach(choice => {
         const number = choice.dataset['number']
         choice.innerText = currentQuestion['choice' + number]
+        choice.append("hello")
     })
 
     availabeleQuestions.splice(questionsIndex, 1)
@@ -90,3 +97,4 @@ choices.forEach(choice => {
         let classToApply = selectedAnswer == currentQuestion.answer
     })
 })
+startGame()
