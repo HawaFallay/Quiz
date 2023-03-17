@@ -7,7 +7,7 @@ console.log(choices)
 let currentQuestion = {}
 let acceptingAnswers = true
 let score = 0
-let questionCounter;
+let questionCounter = -1
 let availabeleQuestions = []
 let time = 60
 
@@ -50,51 +50,59 @@ const SCORE_POINTS = 100
 const MAX_QUESTIONS = 4 
 
 startGame = () => {
-    questionCounter = 0
+    questionCounter = -1
     score = 0 
     availabeleQuestions = [...questions]
     getNewQuestion()
 }
 setInterval(function () {
-  var timerEl = document.getElementById("timer") 
-  timerEl.textContent = 
+  var timerEl = document.getElementById("time") 
+  time --
+  timerEl.textContent = time
 }, 1000);
 
 
+
 getNewQuestion = () => {
-    if(availabeleQuestions.length === 0  || questionCounter > MAX_QUESTIONS) {
+    questionCounter++
+
+    if(availabeleQuestions.length === 0  || questionCounter >= availabeleQuestions.length) {
         localStorage.setItem('mostRecentScore', score)
 
         return window.location.assign('/end.html')
     }
-    questionCounter++
-    progressText.innerText = `Question ${questionCounter} of ${MAX_QUESTIONS}`
-    progressBarFull.getElementsByClassName.width = `${(questionCounter/MAX_QUESTIONS) * 100}%`
+    // progressText.innerText = `Question ${questionCounter} of ${MAX_QUESTIONS}`
+    // progressBarFull.getElementsByClassName.width = `${(questionCounter/MAX_QUESTIONS) * 100}%`
 
-    const questionsIndex = Math.floor(Math.random() * availabeleQuestions.length)
-    currentQuestion = availabeleQuestions[questionsIndex]
-    question.innerText = currentQuestion.question
+    // const questionsIndex = Math.floor(Math.random() * availabeleQuestions.length)
+     currentQuestion = availabeleQuestions[questionCounter]
+     question.innerText = currentQuestion.question
     
     choices.forEach(choice => {
         const number = choice.dataset['number']
-        choice.innerText = currentQuestion['choice' + number]
-        choice.append("hello")
+        choice.textContent = currentQuestion['choice' + number]
+        // choice.append("")
     })
 
-    availabeleQuestions.splice(questionsIndex, 1)
+    // availabeleQuestions.splice(questionsIndex, 1)
 
-    acceptingAnswers = true
+    // acceptingAnswers = true
 }
 
 choices.forEach(choice => {
     choice.addEventListener('click', e => {
-        if(!acceptingAnswers) return
+        // if(!acceptingAnswers) return
 
-        acceptingAnswers = false
-        const SelectedChoice = e.target
-        const selectedAnswer = selectedChoice.dataset['number']
+        // acceptingAnswers = false
+         const selectedChoice = e.target
+         const selectedAnswer = selectedChoice.dataset['number']
+         let isAnswerCorrect = selectedAnswer == currentQuestion.answer
+         console.log(isAnswerCorrect)
 
-        let classToApply = selectedAnswer == currentQuestion.answer
+         if(!isAnswerCorrect){
+            time-=10
+         }
+        getNewQuestion()
     })
 })
 startGame()
